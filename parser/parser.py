@@ -65,14 +65,11 @@ def preprocess(sentence):
     and removing any word that does not contain at least one alphabetic
     character.
     """
-    # print("sentence: ", sentence)
     tokens = nltk.word_tokenize(sentence)
-    # print("tokens: ", tokens)
     words = []
     for token in tokens:
         if any(c.isalpha() for c in token):
             words.append(token.lower())
-    # print("words: ", words)
     return words
 
 
@@ -83,30 +80,16 @@ def np_chunk(tree):
     whose label is "NP" that does not itself contain any other
     noun phrases as subtrees.
     """
-    # TODO: using the library for a 'label' np... but some vp might contain a np
-    # TODO: how do you look down the tree?
-    # TODO: it's not recursive because you only have to go one step down...
-    # nltk.tree documentation...
-    # .label will show you the label of a node
-    # .subtrees() .. this will give you the nltk.org/_modules/nltk/tree.html .. look at the code for this method
-    # TODO: use the .height() == 2 to filter
-    # print("tree: ", tree)
     np_chunks = []
     subtrees = tree.subtrees()
     for subtree in subtrees:
-        # print("subtree: ", subtree)
         if subtree.label() == 'NP':
             contains_noun_phrase = False
             for child_node in subtree:
-                # print("child_node: ", child_node)
-                # print("child_node.label(): ", child_node.label())
                 if child_node.label() == 'NP':
                     contains_noun_phrase = True
             if not contains_noun_phrase:
-                # print("np_chunk added: ", subtree)
                 np_chunks.append(subtree)
-    # print("np_chunks: ", np_chunks)
-    # print("np_chunks count: ", len(np_chunks))
     return np_chunks
 
 
