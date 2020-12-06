@@ -15,7 +15,10 @@ V -> "smiled" | "tell" | "were"
 """
 
 NONTERMINALS = """
-S -> N V
+S -> NP VP
+NP -> N | NP VP | Det NP | Adj NP | NP PP
+VP -> V | VP NP | V PP
+PP -> P NP
 """
 
 grammar = nltk.CFG.fromstring(NONTERMINALS + TERMINALS)
@@ -62,7 +65,15 @@ def preprocess(sentence):
     and removing any word that does not contain at least one alphabetic
     character.
     """
-    raise NotImplementedError
+    print("sentence: ", sentence)
+    tokens = nltk.word_tokenize(sentence)
+    print("tokens: ", tokens)
+    words = []
+    for token in tokens:
+        if any(c.isalpha() for c in token):
+            words.append(token.lower())
+    print("words: ", words)
+    return words
 
 
 def np_chunk(tree):
@@ -72,6 +83,13 @@ def np_chunk(tree):
     whose label is "NP" that does not itself contain any other
     noun phrases as subtrees.
     """
+    # TODO: using the library for a 'label' np... but some vp might contain a np
+    # TODO: how do you look down the tree?
+    # TODO: it's not recursive because you only have to go one step down...
+    # nltk.tree documentation...
+    # .label will show you the label of a node
+    # .subtrees() .. this will give you the nltk.org/_modules/nltk/tree.html .. look at the code for this method
+    # TODO: use the .height() == 2 to filter
     raise NotImplementedError
 
 
