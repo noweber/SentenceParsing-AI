@@ -16,8 +16,8 @@ V -> "smiled" | "tell" | "were"
 
 NONTERMINALS = """
 S -> NP VP
-NP -> N | NP VP | Det NP | Adj NP | NP PP
-VP -> V | VP NP | V PP
+NP -> N | NP VP | Det NP | Adj NP | NP PP | NP Conj NP | Adv NP | Adv VP | NP Adv
+VP -> V | VP NP | VP PP
 PP -> P NP
 """
 
@@ -65,14 +65,14 @@ def preprocess(sentence):
     and removing any word that does not contain at least one alphabetic
     character.
     """
-    print("sentence: ", sentence)
+    # print("sentence: ", sentence)
     tokens = nltk.word_tokenize(sentence)
-    print("tokens: ", tokens)
+    # print("tokens: ", tokens)
     words = []
     for token in tokens:
         if any(c.isalpha() for c in token):
             words.append(token.lower())
-    print("words: ", words)
+    # print("words: ", words)
     return words
 
 
@@ -90,7 +90,24 @@ def np_chunk(tree):
     # .label will show you the label of a node
     # .subtrees() .. this will give you the nltk.org/_modules/nltk/tree.html .. look at the code for this method
     # TODO: use the .height() == 2 to filter
-    raise NotImplementedError
+    # print("tree: ", tree)
+    np_chunks = []
+    subtrees = tree.subtrees()
+    for subtree in subtrees:
+        # print("subtree: ", subtree)
+        if subtree.label() == 'NP':
+            contains_noun_phrase = False
+            for child_node in subtree:
+                # print("child_node: ", child_node)
+                # print("child_node.label(): ", child_node.label())
+                if child_node.label() == 'NP':
+                    contains_noun_phrase = True
+            if not contains_noun_phrase:
+                # print("np_chunk added: ", subtree)
+                np_chunks.append(subtree)
+    # print("np_chunks: ", np_chunks)
+    # print("np_chunks count: ", len(np_chunks))
+    return np_chunks
 
 
 if __name__ == "__main__":
